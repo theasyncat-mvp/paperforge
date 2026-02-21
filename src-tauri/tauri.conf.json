@@ -23,6 +23,14 @@
       "csp": null
     }
   },
+  "plugins": {
+    "updater": {
+      "pubkey": "PLACEHOLDER_REPLACE_WITH_PUBLIC_KEY",
+      "endpoints": [
+        "https://github.com/Jeevash23/paperforge/releases/latest/download/latest.json"
+      ]
+    }
+  },
   "bundle": {
     "active": true,
     "targets": "all",

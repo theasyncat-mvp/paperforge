@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { check } from "@tauri-apps/plugin-updater";
+import { relaunch } from "@tauri-apps/plugin-process";
 import TopBar from "./components/TopBar";
 import ToolSidebar, { allTools } from "./components/ToolSidebar";
 import HomePage from "./components/HomePage";
@@ -41,6 +43,26 @@ const toolComponents = {
 
 export default function App() {
   const [activeTool, setActiveTool] = useState("home");
+
+  // Check for updates silently on startup
+  useEffect(() => {
+    const checkForUpdates = async () => {
+      try {
+        const update = await check();
+        if (!update) return;
+        const confirmed = window.confirm(
+          `Update available: v${update.version}\nInstall now?`
+        );
+        if (confirmed) {
+          await update.downloadAndInstall();
+          await relaunch();
+        }
+      } catch {
+        // silently ignore
+      }
+    };
+    checkForUpdates();
+  }, []);
 
   const ActiveComponent = toolComponents[activeTool];
   const activeLabel = allTools.find((t) => t.id === activeTool)?.label;
